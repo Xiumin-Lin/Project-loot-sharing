@@ -57,6 +57,7 @@ public class Main {
 						System.out.println(p);
 						break;
 					case 0:
+						crew.verifCrew();
 						System.out.println("Exit");
 						crew.showCrew(); // DEBUG
 						end = true;

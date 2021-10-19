@@ -31,6 +31,14 @@ public class Pirate {
 			this.prefList.add(pref);
 	}
 
+	public boolean verif(int nb){
+		return prefList.size() == nb;
+	}
+
+	public String getName() {
+		return name;
+	}
+
 	@Override
 	public String toString() {
 		return "Pirate{" + "id=" + id + ", name=" + name + ", loot=" + loot + ", prefList=" + prefList + '}';

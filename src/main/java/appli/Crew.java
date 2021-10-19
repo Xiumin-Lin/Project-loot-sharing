@@ -69,4 +69,13 @@ public class Crew {
 		System.out.println("Equipage : ");
 		equipage.forEach((s, pirate) -> System.out.println("\t" + pirate));
 	}
+
+	public boolean verifCrew() throws Exception {
+		for(Pirate p : equipage.values()) {
+			if(!p.verif(nbPirate)){
+				throw new Exception("Le pirate " + p.getName() + " n'a pas ses preferences !");
+			}
+		}
+		return true;
+	}
 }
