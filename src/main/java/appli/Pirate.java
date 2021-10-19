@@ -39,10 +39,14 @@ public class Pirate {
 		return name;
 	}
 
-	public void giveLoot(int loot, int borne) throws Exception {
+	public void setLoot(int loot, int borne) throws Exception {
 		if(loot <= 0 || loot > borne)
 			throw new Exception("Loot : " + loot + " is out of range !");
 		this.loot = loot;
+	}
+
+	public int getLoot(){
+		return loot;
 	}
 
 	@Override

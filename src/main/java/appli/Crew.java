@@ -82,7 +82,19 @@ public class Crew {
 	public void giveLootAuto() throws Exception { // TODO to upgrade to a better algo
 		int cpt = 1;
 		for(Pirate p : equipage.values()) {
-			p.giveLoot(cpt++, nbPirate);
+			p.setLoot(cpt++, nbPirate);
+		}
+	}
+
+	public void exchangeLoot(String a, String b) throws Exception {
+		Pirate p = equipage.get(a);
+		Pirate p2 = equipage.get(b);
+		if(p != null && p2 != null) {
+			int tmp = p2.getLoot();
+			p2.setLoot(p.getLoot(), nbPirate);
+			p.setLoot(tmp, nbPirate);
+		} else {
+			throw new Exception("Erreur : " + a + " ou/et " + b + " n'existe pas dans l'equipage !");
 		}
 	}
 }
