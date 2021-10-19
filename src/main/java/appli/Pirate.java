@@ -39,6 +39,12 @@ public class Pirate {
 		return name;
 	}
 
+	public void giveLoot(int loot, int borne) throws Exception {
+		if(loot <= 0 || loot > borne)
+			throw new Exception("Loot : " + loot + " is out of range !");
+		this.loot = loot;
+	}
+
 	@Override
 	public String toString() {
 		return "Pirate{" + "id=" + id + ", name=" + name + ", loot=" + loot + ", prefList=" + prefList + '}';

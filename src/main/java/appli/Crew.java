@@ -72,10 +72,17 @@ public class Crew {
 
 	public boolean verifCrew() throws Exception {
 		for(Pirate p : equipage.values()) {
-			if(!p.verif(nbPirate)){
+			if(!p.verif(nbPirate)) {
 				throw new Exception("Le pirate " + p.getName() + " n'a pas ses preferences !");
 			}
 		}
 		return true;
+	}
+
+	public void giveLootAuto() throws Exception { // TODO to upgrade to a better algo
+		int cpt = 1;
+		for(Pirate p : equipage.values()) {
+			p.giveLoot(cpt++, nbPirate);
+		}
 	}
 }

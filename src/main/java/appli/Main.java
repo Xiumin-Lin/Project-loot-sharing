@@ -58,7 +58,9 @@ public class Main {
 						break;
 					case 0:
 						crew.verifCrew();
-						System.out.println("Exit");
+						System.out.println("Exit !");
+						System.out.println("Distribution automatique des tresors !");
+						crew.giveLootAuto();
 						crew.showCrew(); // DEBUG
 						end = true;
 						break;
