@@ -1,6 +1,7 @@
 package appli;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Pirate {
 	private static int cpt_id = 0;
@@ -47,6 +48,10 @@ public class Pirate {
 
 	public int getLoot(){
 		return loot;
+	}
+
+	public List<Integer> getMorePrefList(){
+		return prefList.subList(0, prefList.indexOf(this.loot));
 	}
 
 	@Override

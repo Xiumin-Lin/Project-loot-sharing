@@ -95,19 +95,18 @@ public class Main {
 
 	public static boolean choixMenu2(Crew crew, Scanner sc, int choix) throws Exception {
 		switch(choix) {
-			case 1:
-				// Echange
-				System.out.print("Entrer les lettres des 2 pirates qui s'aiment pas ! (Ex: A B) : ");
+			case 1: // Echange
+				System.out.print("Entrer les lettres des 2 pirates doivent echanger leur objet ! (Ex: A B) : ");
 				String a = sc.next().toUpperCase();
 				String b = sc.next().toUpperCase();
 				crew.exchangeLoot(a, b);
-				crew.showCrew(); // DEBUG
+				crew.showCrewLoot();
 				break;
-			case 2:
-				// coût
+			case 2: // Cout
+				System.out.println(crew.calcultateCost());
+				crew.showCrewLoot();
 				break;
-			case 0:
-				// fin
+			case 0: // Fin
 				System.out.println("Fin du logiciel.");
 				return true;
 			default:

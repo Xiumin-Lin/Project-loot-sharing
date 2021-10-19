@@ -2,6 +2,7 @@ package appli;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Crew {
 	private ArrayList<ArrayList<Integer>> relation = new ArrayList<>();
@@ -70,13 +71,18 @@ public class Crew {
 		equipage.forEach((s, pirate) -> System.out.println("\t" + pirate));
 	}
 
-	public boolean verifCrew() throws Exception {
+	public void showCrewLoot() {
+		System.out.println();
+		equipage.forEach((s, pirate) -> System.out.println(s + ":o" + pirate.getLoot()));
+		System.out.println();
+	}
+
+	public void verifCrew() throws Exception {
 		for(Pirate p : equipage.values()) {
 			if(!p.verif(nbPirate)) {
 				throw new Exception("Le pirate " + p.getName() + " n'a pas ses preferences !");
 			}
 		}
-		return true;
 	}
 
 	public void giveLootAuto() throws Exception { // TODO to upgrade to a better algo
@@ -96,5 +102,29 @@ public class Crew {
 		} else {
 			throw new Exception("Erreur : " + a + " ou/et " + b + " n'existe pas dans l'equipage !");
 		}
+	}
+
+	public Pirate findPirateByID(int id) {
+		String name = "" + (char) (id + 65);
+		return equipage.getOrDefault(name, null);
+	}
+
+	public int calcultateCost() {
+		int cost = 0;
+		for(Pirate p : equipage.values()) {     // pour chaque pirate
+			List<Integer> morePrefList = p.getMorePrefList(); // recup list des loots qu'il aurait pref avoir
+			if(!morePrefList.isEmpty()) {       // si la liste n'est pas vide
+				for(int i = 0; i < nbPirate; i++) { // pour chaque pirate
+					if(i != p.getId() && relation.get(p.getId()).get(i) != 0) { // s'il est diff de p && que p le desteste
+						Pirate dislikeP = findPirateByID(i);    // recup le pirate detesté
+						if(dislikeP != null && morePrefList.contains(dislikeP.getLoot())) { // s'il est pas null && qu'il a l'obj pref de p
+							cost++; // on increment de 1
+							break;
+						}
+					}
+				}
+			}
+		}
+		return cost;
 	}
 }
