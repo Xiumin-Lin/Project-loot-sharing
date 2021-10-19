@@ -65,8 +65,8 @@ public class Crew {
 		System.out.println();
 	}
 
-	public void showCrew(){
+	public void showCrew() {
 		System.out.println("Equipage : ");
-		equipage.forEach((s, pirate) -> System.out.println("\t"+pirate));
+		equipage.forEach((s, pirate) -> System.out.println("\t" + pirate));
 	}
 }

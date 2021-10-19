@@ -20,8 +20,15 @@ public class Pirate {
 		return id;
 	}
 
-	public void addPrefList(int pref) {
-		this.prefList.add(pref);
+	public void addPref(int pref, int borne) throws Exception {
+		if(pref <= 0 || pref > borne)
+			throw new Exception("Pref : " + pref + " is out of range !");
+		else if(prefList.contains(pref)){
+			this.prefList.clear();
+			throw new Exception("Pref : " + pref + " is already added !");
+		}
+		else
+			this.prefList.add(pref);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class Main {
 
 	private static int getNbPirate(Scanner sc) {
 		System.out.print("Entrer le nombre de pirate : ");
-		int n = 0;
+		int n;
 		do {
 			n = sc.nextInt();
 		} while(n <= 0 || n > NB_PIRATE_MAX);
@@ -47,14 +47,12 @@ public class Main {
 						System.out.print("Entrer les preferences d'un pirate (Ex: A 1 2 3 4) : ");
 						String pName = sc.next().toUpperCase();
 						Pirate p = crew.getPirate(pName);
-						if(p != null){
+						if(p != null) {
 							for(int i = 0; i < crew.getNbPirate(); i++) {
-								p.addPrefList(sc.nextInt());
+								p.addPref(sc.nextInt(), crew.getNbPirate());
 							}
-						}
-						else{
+						} else {
 							System.out.println("Le pirate " + pName + " n'existe pas !\n");
-							sc.nextLine();
 						}
 						System.out.println(p);
 						break;
@@ -68,8 +66,10 @@ public class Main {
 				}
 			} catch(InputMismatchException e) {
 				System.out.println("I want a integer !\n");
-				sc.nextLine();
+			} catch(Exception e) {
+				System.err.println(e.getMessage());
 			}
+			sc.nextLine();
 		} while(!end);
 	}
 }
