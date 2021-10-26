@@ -73,10 +73,10 @@ public class Main {
 				System.out.println(p);
 				break;
 			case 0:
-				crew.verifCrew();
+				crew.allPirateFavListIsComplete();
 				System.out.println("Exit !");
 				System.out.println("Distribution automatique des tresors !");
-				crew.giveLootAuto();
+				crew.autoLootAttribution();
 				crew.showCrew(); // DEBUG
 				return true; // isEnd = true
 			default:
@@ -103,7 +103,7 @@ public class Main {
 				crew.showCrewLoot();
 				break;
 			case 2: // Cout
-				System.out.println(crew.calcultateCost());
+				System.out.println("The cost : " + crew.calcultateCost());
 				crew.showCrewLoot();
 				break;
 			case 0: // Fin

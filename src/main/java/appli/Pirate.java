@@ -14,7 +14,6 @@ import java.util.List;
 public class Pirate {
 
 	// attributes
-
 	/**
 	 * Counter that gives a unique id to a pirate when it is created.
 	 */
