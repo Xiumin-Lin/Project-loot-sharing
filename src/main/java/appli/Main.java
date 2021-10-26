@@ -18,7 +18,7 @@ public class Main {
 	}
 
 	private static int getNbPirate(Scanner sc) {
-		System.out.print("Entrer le nombre de pirate : ");
+		System.out.print("Enter the number of pirates : ");
 		int n;
 		do {
 			n = sc.nextInt();
@@ -45,22 +45,22 @@ public class Main {
 
 	public static void textMenu1() {
 		System.out.println("Menu 1 :");
-		System.out.println("\t(1) Ajouter une relation");
-		System.out.println("\t(2) Ajouter des préférences");
-		System.out.println("\t(0) Fin");
+		System.out.println("\t(1) Add a relationship");
+		System.out.println("\t(2) Adding preferences");
+		System.out.println("\t(0) End");
 		System.out.print(">>> ");
 	}
 
 	public static boolean choixMenu1(Crew crew, Scanner sc, int choix) throws Exception {
 		switch(choix) {
 			case 1:
-				System.out.print("Entrer les lettres des 2 pirates qui s'aiment pas ! (Ex: A B) : ");
+				System.out.print("Enter the letters of the 2 pirates who dislike each other ! (Ex: A B) : ");
 				String a = sc.next().toUpperCase();
 				String b = sc.next().toUpperCase();
 				crew.addRelation(a, b);
 				break;
 			case 2:
-				System.out.print("Entrer les preferences d'un pirate (Ex: A 1 2 3 4) : ");
+				System.out.print("Enter the preferences of a pirate (Ex: A 1 2 3 4) : ");
 				String pName = sc.next().toUpperCase();
 				Pirate p = crew.getPirate(pName);
 				if(p != null) {
@@ -68,14 +68,14 @@ public class Main {
 						p.addFavLoot(sc.nextInt(), crew.getNbPirate());
 					}
 				} else {
-					System.out.println("Le pirate " + pName + " n'existe pas !\n");
+					System.out.println("Pirate " + pName + " doesn't exist !\n");
 				}
 				System.out.println(p);
 				break;
 			case 0:
 				crew.allPirateFavListIsComplete();
 				System.out.println("Exit !");
-				System.out.println("Distribution automatique des tresors !");
+				System.out.println("Automatic Loot Attribution...");
 				crew.autoLootAttribution();
 				crew.showCrew(); // DEBUG
 				return true; // isEnd = true
@@ -87,27 +87,27 @@ public class Main {
 
 	public static void textMenu2() {
 		System.out.println("Menu 2 :");
-		System.out.println("\t(1) Echanger un objet");
-		System.out.println("\t(2) Afficher le coût");
-		System.out.println("\t(0) Fin");
+		System.out.println("\t(1) Exchanging an object");
+		System.out.println("\t(2) Show cost");
+		System.out.println("\t(0) End");
 		System.out.print(">>> ");
 	}
 
 	public static boolean choixMenu2(Crew crew, Scanner sc, int choix) throws Exception {
 		switch(choix) {
-			case 1: // Echange
-				System.out.print("Entrer les lettres des 2 pirates doivent echanger leur objet ! (Ex: A B) : ");
+			case 1: // Exchange
+				System.out.print("Enter the letters of the 2 pirates who have to exchange their loots ! (Ex: A B) : ");
 				String a = sc.next().toUpperCase();
 				String b = sc.next().toUpperCase();
 				crew.exchangeLoot(a, b);
 				crew.showCrewLoot();
 				break;
-			case 2: // Cout
+			case 2: // Cost
 				System.out.println("The cost : " + crew.calcultateCost());
 				crew.showCrewLoot();
 				break;
-			case 0: // Fin
-				System.out.println("Fin du logiciel.");
+			case 0: // End
+				System.out.println("End of the programme.");
 				return true;
 			default:
 				System.out.println("Invalid input !");

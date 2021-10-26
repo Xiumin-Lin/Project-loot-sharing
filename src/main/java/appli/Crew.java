@@ -134,7 +134,7 @@ public class Crew {
 	public void allPirateFavListIsComplete() throws Exception {
 		for(Pirate p : equipage.values()) {
 			if(!p.favListIsComplete(nbPirate)) {
-				throw new Exception("The " + p.getName() + " n'a pas ses preferences !");
+				throw new Exception("Favourite loot list of the pirate " + p.getName() + " is not complete !");
 			}
 		}
 	}
