@@ -79,7 +79,7 @@ public class Crew {
 
 	public void verifCrew() throws Exception {
 		for(Pirate p : equipage.values()) {
-			if(!p.verif(nbPirate)) {
+			if(!p.favListIsComplete(nbPirate)) {
 				throw new Exception("Le pirate " + p.getName() + " n'a pas ses preferences !");
 			}
 		}
@@ -112,7 +112,7 @@ public class Crew {
 	public int calcultateCost() {
 		int cost = 0;
 		for(Pirate p : equipage.values()) {     // pour chaque pirate
-			List<Integer> morePrefList = p.getMorePrefList(); // recup list des loots qu'il aurait pref avoir
+			List<Integer> morePrefList = p.getMoreFavList(); // recup list des loots qu'il aurait pref avoir
 			if(!morePrefList.isEmpty()) {       // si la liste n'est pas vide
 				for(int i = 0; i < nbPirate; i++) { // pour chaque pirate
 					if(i != p.getId() && relation.get(p.getId()).get(i) != 0) { // s'il est diff de p && que p le desteste

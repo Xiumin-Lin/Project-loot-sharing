@@ -65,7 +65,7 @@ public class Main {
 				Pirate p = crew.getPirate(pName);
 				if(p != null) {
 					for(int i = 0; i < crew.getNbPirate(); i++) {
-						p.addPref(sc.nextInt(), crew.getNbPirate());
+						p.addFavLoot(sc.nextInt(), crew.getNbPirate());
 					}
 				} else {
 					System.out.println("Le pirate " + pName + " n'existe pas !\n");
