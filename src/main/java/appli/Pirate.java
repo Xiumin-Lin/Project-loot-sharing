@@ -61,7 +61,7 @@ public class Pirate {
 	 */
 	public void setLoot(int loot, int limit) throws Exception {
 		if(loot <= 0 || loot > limit)
-			throw new Exception("Loot : " + loot + " is out of range !");
+			throw new Exception("[Error] Loot : " + loot + " is out of range !");
 		this.loot = loot;
 	}
 
@@ -84,10 +84,10 @@ public class Pirate {
 	 */
 	public void addFavLoot(int loot, int limit) throws Exception {
 		if(loot <= 0 || loot > limit)
-			throw new Exception("Can't add in the favourite loot list : " + loot + " is out of range !");
+			throw new Exception("[Error] Can't add in the favourite loot list : the loot " + loot + " is out of range !");
 		else if(favList.contains(loot)) {
 			this.favList.clear();
-			throw new Exception("Can't add in the favourite loot list : " + loot + " is already added !" +
+			throw new Exception("[Error] Can't add in the favourite loot list : the loot " + loot + " is already added !" +
 					"The favList is cleaned, you can restart the favList.");
 		} else
 			this.favList.add(loot);

@@ -33,7 +33,7 @@ public class Crew {
 	public Crew(int n) {
 		this.nbPirate = n;
 		// creation of all the pirates of the equipage
-		System.out.println("Your crew : "); // DEBUG
+		System.out.println("Init your crew : "); // DEBUG
 		for(int i = 0; i < nbPirate; i++) {
 			String lettre = "" + (char) (A_IN_ASCII + i);
 			equipage.put(lettre, new Pirate(lettre));
@@ -96,16 +96,18 @@ public class Crew {
 	 *
 	 * @param a the pirate whose relationship is involved.
 	 * @param b the other pirate whose relationship is involved.
+	 * @throws Exception if pirate A or B doesn't exist.
 	 */
-	public void addRelation(String a, String b) {
+	public void addRelation(String a, String b) throws Exception {
 		if(equipage.containsKey(a) && equipage.containsKey(b)) {
 			int pirateID = equipage.get(a).getId();
 			int pirateID2 = equipage.get(b).getId();
 			relationship.get(pirateID).set(pirateID2, ONE);
 			relationship.get(pirateID2).set(pirateID, ONE);
+			System.out.println("Success in adding the relationship between " + a + " and " + b);
 			showRelation();
 		} else {
-			System.out.println("Error ! Pirate " + a + " or " + b + " doesn't exist !");
+			throw new Exception("[Error] Pirate " + a + " or " + b + " doesn't exist !");
 		}
 	}
 
@@ -115,6 +117,7 @@ public class Crew {
 	public void showCrew() {
 		System.out.println("Crew : ");
 		equipage.forEach((s, pirate) -> System.out.println("\t" + pirate));
+		System.out.println();
 	}
 
 	/**
@@ -129,18 +132,19 @@ public class Crew {
 	/**
 	 * Check if all pirate favourite loot list is complete.
 	 *
-	 * @throws Exception if there is at least one list that is incomplete
+	 * @throws Exception if there is at least one list that is incomplete.
 	 */
 	public void allPirateFavListIsComplete() throws Exception {
 		for(Pirate p : equipage.values()) {
 			if(!p.favListIsComplete(nbPirate)) {
-				throw new Exception("Favourite loot list of the pirate " + p.getName() + " is not complete !");
+				throw new Exception("[Error] Favourite loot list of the pirate " + p.getName() + " is not complete !");
 			}
 		}
 	}
 
 	/**
-	 * Automatic loot attribution to each member of the crew
+	 * Automatic loot attribution to each member of the crew.
+	 *
 	 * @throws Exception if a loot to attribuate is not in the list of loot to be shared.
 	 */
 	public void autoLootAttribution() throws Exception { // TODO to upgrade to a better algo
@@ -152,6 +156,7 @@ public class Crew {
 
 	/**
 	 * Exchange the loots of 2 pirates.
+	 *
 	 * @param a the pirate involved.
 	 * @param b the other pirate involved.
 	 * @throws Exception if pirate A or B doesn't exist.
@@ -163,14 +168,16 @@ public class Crew {
 			int tmp = p2.getLoot();
 			p2.setLoot(p.getLoot(), nbPirate);
 			p.setLoot(tmp, nbPirate);
+			System.out.println("Successful exchange of loot between " + a + " and " + b);
 		} else {
-			throw new Exception("Error ! Pirate " + a + " or " + b + " doesn't exist !");
+			throw new Exception("[Error] Pirate " + a + " or " + b + " doesn't exist !");
 		}
 	}
 
 	/**
 	 * Returns the pirate with the specified ID. OR null if not found.
-	 * @param id the pirate's ID that we are looking for
+	 *
+	 * @param id the pirate's ID that we are looking for.
 	 * @return the wanted pirate ou null if not found.
 	 */
 	public Pirate findPirateByID(int id) {
@@ -180,8 +187,9 @@ public class Crew {
 
 	/**
 	 * Calculate and return how many pirates are jealous (the cost)
-	 * in the crew for the current attribution of loot
-	 * @return the cost of the current attribution of loot in the crew (number of pirates jealous of another)
+	 * in the crew for the current attribution of loot.
+	 *
+	 * @return the cost of the current attribution of loot in the crew (number of pirates jealous of another).
 	 */
 	public int calcultateCost() {
 		int cost = 0;
