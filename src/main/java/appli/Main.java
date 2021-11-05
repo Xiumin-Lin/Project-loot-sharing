@@ -40,6 +40,7 @@ public class Main {
 				System.out.println("I want a integer !\n");
 				nb = -1; // set to -1 to keep the loop going
 			}
+			sc.nextLine();
 		} while(nb <= 0 || nb > NB_PIRATE_MAX);
 		return nb;
 	}
@@ -60,9 +61,9 @@ public class Main {
 				int choice = sc.nextInt();
 				isEnd = (isMenu1) ? menu1Choice(crew, sc, choice) : menu2Choice(crew, sc, choice);
 			} catch(InputMismatchException e) {
-				System.out.println("I want a integer !\n");
+				System.out.println("I want a integer !");
 			} catch(Exception e) {
-				System.out.println(e.getMessage() + "\n");
+				System.out.println(e.getMessage());
 			}
 			sc.nextLine();
 		} while(!isEnd);
@@ -72,7 +73,7 @@ public class Main {
 	 * Display the text of the menu 1 for relationship and favourite loot management.
 	 */
 	public static void menu1Text() {
-		System.out.println("Menu 1 :");
+		System.out.println("\nMenu 1 :");
 		System.out.println("\t(1) Add a relationship");
 		System.out.println("\t(2) Adding preferences");
 		System.out.println("\t(0) End");
@@ -108,7 +109,7 @@ public class Main {
 					}
 					System.out.println("Success of adding pref : " + p); // display pirate's info
 				} else {
-					System.out.println("Pirate " + pName + " doesn't exist !\n");
+					System.out.println("Pirate " + pName + " doesn't exist !");
 				}
 				break;
 			case 0: // end
@@ -119,7 +120,7 @@ public class Main {
 				crew.showCrew(); // DEBUG
 				return true; // isEnd = true
 			default:
-				System.out.println("Invalid Input ! Retry !\n");
+				System.out.println("Invalid Input ! Retry !");
 		}
 		return false;
 	}
@@ -128,7 +129,7 @@ public class Main {
 	 * Display the text of menu 2 for exchanging an object and display the cost.
 	 */
 	public static void menu2Text() {
-		System.out.println("Menu 2 :");
+		System.out.println("\nMenu 2 :");
 		System.out.println("\t(1) Exchanging an object");
 		System.out.println("\t(2) Show cost");
 		System.out.println("\t(0) End");
@@ -163,7 +164,7 @@ public class Main {
 				System.out.println("End of the program.");
 				return true;
 			default:
-				System.out.println("Invalid input !");
+				System.out.println("Invalid Input ! Retry !");
 		}
 		return false;
 	}

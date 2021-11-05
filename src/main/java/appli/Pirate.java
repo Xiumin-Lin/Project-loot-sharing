@@ -83,12 +83,14 @@ public class Pirate {
 	 *                   or is already present in his favourite loot list.
 	 */
 	public void addFavLoot(int loot, int limit) throws Exception {
-		if(loot <= 0 || loot > limit)
-			throw new Exception("[Error] Can't add in the favourite loot list : the loot " + loot + " is out of range !");
-		else if(favList.contains(loot)) {
+		if(loot <= 0 || loot > limit) {
 			this.favList.clear();
-			throw new Exception("[Error] Can't add in the favourite loot list : the loot " + loot + " is already added !" +
-					"The favList is cleaned, you can restart the favList.");
+			throw new Exception("[Error] Can't add in the favourite loot list : the loot " + loot + " is out of range ! " +
+					"The favList is cleaned, please re-enter the pirate's favList.");
+		} else if(favList.contains(loot)) {
+			this.favList.clear();
+			throw new Exception("[Error] Can't add in the favourite loot list : the loot " + loot + " is already added ! " +
+					"The favList is cleaned, please re-enter the pirate's favList.");
 		} else
 			this.favList.add(loot);
 	}
@@ -105,6 +107,7 @@ public class Pirate {
 
 	/**
 	 * Return a clone of the favList.
+	 *
 	 * @return a clone of the favList.
 	 */
 	public List<Integer> getFavList() {
