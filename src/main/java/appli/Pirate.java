@@ -18,7 +18,7 @@ public class Pirate {
 	 * Counter that gives a unique id to a pirate when it is created.
 	 */
 	private static int cptId = 0;
-	private int id;
+	private final int id;
 	private String name;
 	private int loot;
 	/**
@@ -101,6 +101,14 @@ public class Pirate {
 	 */
 	public boolean favListIsComplete(int limit) {
 		return favList.size() == limit;
+	}
+
+	/**
+	 * Return a clone of the favList.
+	 * @return a clone of the favList.
+	 */
+	public List<Integer> getFavList() {
+		return new ArrayList<>(favList);
 	}
 
 	/**

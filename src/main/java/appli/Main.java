@@ -3,6 +3,13 @@ package appli;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Main class to run the program.
+ *
+ * @author Xiumin Lin
+ * @author Céline Li
+ * @version 1.0
+ */
 public class Main {
 	public static final int NB_PIRATE_MAX = 26;
 

@@ -144,13 +144,21 @@ public class Crew {
 
 	/**
 	 * Automatic loot attribution to each member of the crew.
+	 * Each pirate (in the order of their ID) receives his favourite object if it is available, otherwise
+	 * his second favourite item if it is available, etc.
 	 *
 	 * @throws Exception if a loot to attribuate is not in the list of loot to be shared.
 	 */
-	public void autoLootAttribution() throws Exception { // TODO to upgrade to a better algo
-		int cpt = 1;
+	public void autoLootAttribution() throws Exception {
+		List<Integer> givedLootList = new ArrayList<>();
 		for(Pirate p : equipage.values()) {
-			p.setLoot(cpt++, nbPirate);
+			for(int loot : p.getFavList()) {
+				if(!givedLootList.contains(loot)) {
+					p.setLoot(loot, nbPirate);
+					givedLootList.add(loot);
+					break;
+				}
+			}
 		}
 	}
 
