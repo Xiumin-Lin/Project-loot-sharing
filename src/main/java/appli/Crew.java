@@ -21,9 +21,17 @@ public class Crew {
 	 * If 2 pirates, i and j, do not like each other, relationship.get(i).get(j) = ONE.
 	 * Else it's ZERO.
 	 */
-	private ArrayList<ArrayList<Integer>> relationship = new ArrayList<>();
+	private ArrayList<ArrayList<Integer>> relationship;
 	private int nbPirate;
-	private HashMap<String, Pirate> equipage = new HashMap<>();
+	private HashMap<String, Pirate> equipage;
+	private ArrayList<Loot> lootList;
+
+	public Crew() {
+		this.nbPirate = 0;
+		this.relationship = new ArrayList<>();
+		this.equipage = new HashMap<>();
+		this.lootList = new ArrayList<>();
+	}
 
 	/**
 	 * Constructor who initializes a crew of n members and where nobody hates anybody.
@@ -31,6 +39,7 @@ public class Crew {
 	 * @param n the number of pirates in the crew.
 	 */
 	public Crew(int n) {
+		this();
 		this.nbPirate = n;
 		// creation of all the pirates of the equipage
 		System.out.println("Initialization of the crew : "); // DEBUG
@@ -39,7 +48,7 @@ public class Crew {
 			equipage.put(lettre, new Pirate(lettre));
 			System.out.println("\t" + equipage.get(lettre)); // DEBUG
 		}
-		initRelation(n);
+		initCrewRelation(n);
 	}
 
 	/**
@@ -47,7 +56,7 @@ public class Crew {
 	 *
 	 * @param n the number of pirates in the crew.
 	 */
-	private void initRelation(int n) {
+	private void initCrewRelation(int n) {
 		for(int i = 0; i < n; i++) {
 			relationship.add(new ArrayList<>());
 			for(int j = 0; j < n; j++) {
@@ -129,16 +138,19 @@ public class Crew {
 	 * Check if all pirate favourite loot list is complete.
 	 *
 	 * @throws Exception if there is at least one list that is incomplete.
+	 * @return
 	 */
-	public void allPirateFavListIsComplete() throws Exception {
+	public boolean allPirateFavListIsComplete() throws Exception {
 		for(Pirate p : equipage.values()) {
 			if(!p.favListIsComplete(nbPirate)) {
 				throw new Exception("[Error] Favourite loot list of the pirate " + p.getName() + " is not complete !");
 			}
 		}
+		return true;
 	}
 
 	/**
+	 * // TODO PARTIE II Automatisation
 	 * Automatic loot attribution to each member of the crew.
 	 * Each pirate (in the order of their ID) receives his favourite object if it is available, otherwise
 	 * his second favourite item if it is available, etc.
@@ -212,5 +224,30 @@ public class Crew {
 			}
 		}
 		return cost;
+	}
+
+	public void addPirate(String name) {
+		Pirate p = this.equipage.put(name, new Pirate(name));
+		if(p == null) {
+			this.nbPirate++;
+			this.addInRelation();
+		} else System.out.println("Pirate " + name + " is already added !");
+		showRelation(); // debug
+	}
+
+	private void addInRelation() { // TODO avoir un nom plus clair
+		relationship.add(new ArrayList<>());
+		for(int i = 0; i < nbPirate; i++) { // TODO modifier le nbPirate en equipage.size()
+			relationship.get(i).add(ZERO);
+			if(i == nbPirate - 1) {
+				for(int j = 1; j < nbPirate; j++) {
+					relationship.get(i).add(ZERO);
+				}
+			}
+		}
+	}
+
+	public void addLoot(String label) {
+		lootList.add(new Loot(label));
 	}
 }

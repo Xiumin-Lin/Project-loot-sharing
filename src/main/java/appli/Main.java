@@ -14,14 +14,27 @@ public class Main {
 	public static final int NB_PIRATE_MAX = 26;
 
 	public static void main(String[] args) {
+		Crew crew = new Crew(); // P2
+//		File f = new File("D:/xiumi/Documents/L3_Info/Prog_Av_App/Projets/simpleTest.txt");
+//		String inputString = Translator.translate(f, crew);
+//		System.out.println(inputString); // DEBUG
+////		Scanner sc = new Scanner(new File("D:/xiumi/Documents/L3_Info/Prog_Av_App/Projets/simpleTest.txt"));
+//		Scanner fileScanner = new Scanner(inputString); // TODO solution temporaire
+//
+//		// P1 ---
+////		Scanner sc = new Scanner(System.in);
+////		int nbPirate = enterNbPirate(sc);
+////		Crew crew = new Crew(nbPirate);
+//		// End P1 ---
+//
+//		// ajout des relations
+//		menu(crew, fileScanner, 1);  // display the menu 1
+//		fileScanner.close();
 		Scanner sc = new Scanner(System.in);
-		int nbPirate = enterNbPirate(sc);
-		Crew crew = new Crew(nbPirate);
 
-		menu(crew, sc, true);   // true display the menu 1
-		menu(crew, sc, false);  // false display the menu 2
-
+		menu(crew, sc, 3);
 		sc.close();
+
 	}
 
 	/**
@@ -50,16 +63,29 @@ public class Main {
 	 *
 	 * @param crew    the pirate crew to manage.
 	 * @param sc      a scanner for text input and output.
-	 * @param isMenu1 true for display and manage the menu 1, else false for the menu 2.
+	 * @param menuNum true for display and manage the menu 1, else false for the menu 2. // TODO cahnge this
 	 */
-	private static void menu(Crew crew, Scanner sc, boolean isMenu1) {
+	private static void menu(Crew crew, Scanner sc, int menuNum) {
 		boolean isEnd = false;
 		do {
-			if(isMenu1) menu1Text();
-			else menu2Text();
 			try {
+				if(menuNum == 2) menu2Text();
+				else if(menuNum == 3) menu3Text();
 				int choice = sc.nextInt();
-				isEnd = (isMenu1) ? menu1Choice(crew, sc, choice) : menu2Choice(crew, sc, choice);
+				switch(menuNum) {
+					case 1:
+						isEnd = menu1Choice(crew, sc, choice);
+						break;
+					case 2:
+						isEnd = menu2Choice(crew, sc, choice);
+						continue;
+					case 3:
+						isEnd = menu3Choice(crew, sc, choice);
+						break;
+					default:
+						System.out.println("Invalid menu number !");
+						return;
+				}
 			} catch(InputMismatchException e) {
 				System.out.println("I want a integer !");
 			} catch(Exception e) {
@@ -161,10 +187,47 @@ public class Main {
 				crew.showCrewLoot();
 				break;
 			case 0: // End
-				System.out.println("End of the program.");
+//				System.out.println("End of the program."); // P1
 				return true;
 			default:
 				System.out.println("Invalid Input ! Retry !");
+		}
+		return false;
+	}
+
+	/**
+	 * Display the text of menu 3 for exchanging an object and display the cost.
+	 */
+	public static void menu3Text() {
+		System.out.println("\nMenu Principal :");
+		System.out.println("\t(1) Resolution automatique");
+		System.out.println("\t(2) Resolution manuelle");
+		System.out.println("\t(3) Sauvegarde");
+		System.out.println("\t(0) End");
+		System.out.print(">>> ");
+	}
+
+	public static boolean menu3Choice(Crew crew, Scanner sc, int choice) throws Exception {
+		if(crew.allPirateFavListIsComplete()) {
+			crew.showCrew(); // DEBUG
+			switch(choice) {
+				case 1: // resolve auto
+					System.out.println("Resolution automatique.");
+//					crew.autoLootAttribution(); // debug
+					break;
+				case 2: // resolve manuelle
+					System.out.println("Resolution manuelle.");
+					menu(crew, sc, 2); // invoque menu 2
+					break;
+				case 3: // sauvegarde
+					System.out.println("Save.");
+					break;
+				case 0: // End
+					System.out.println("End of the program.");
+					return true;
+				default:
+					System.out.println("Invalid Input ! Retry !");
+			}
 		}
 		return false;
 	}
