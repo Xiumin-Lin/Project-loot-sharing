@@ -20,17 +20,17 @@ public class Pirate {
 	private static int cptId = 0;
 	private final int id;
 	private String name;
-	private int loot;
+	private Loot loot;
 	/**
 	 * List of her favourite loot in order of the most to the least desired
 	 */
-	private ArrayList<Integer> favList;
+	private ArrayList<Loot> favList;
 
 	// constructor
 	Pirate(String name) {
 		this.id = cptId++;
 		this.name = name;
-		this.loot = -1; // -1 = no loot
+		this.loot = null; // null = no loot
 		this.favList = new ArrayList<>();
 	}
 
@@ -55,13 +55,9 @@ public class Pirate {
 	/**
 	 * Set the pirate's loot.
 	 *
-	 * @param loot  the loot to be given to the pirate.
-	 * @param limit the max number of loots to share.
-	 * @throws Exception if the loot is not in the list of loot to be shared.
+	 * @param loot the loot to be given to the pirate.
 	 */
-	public void setLoot(int loot, int limit) throws Exception {
-		if(loot <= 0 || loot > limit)
-			throw new Exception("[Error] Loot : " + loot + " is out of range !");
+	public void setLoot(Loot loot) {
 		this.loot = loot;
 	}
 
@@ -70,24 +66,18 @@ public class Pirate {
 	 *
 	 * @return the pirate's loot, if the pirate doesn't have one, return -1.
 	 */
-	public int getLoot() {
+	public Loot getLoot() {
 		return loot;
 	}
 
 	/**
 	 * Add a loot to the pirate's favourite loot list.
 	 *
-	 * @param loot  the loot to be added.
-	 * @param limit the max number of loots to share.
-	 * @throws Exception if the loot is not in the list of shared loots
-	 *                   or is already present in his favourite loot list.
+	 * @param loot loot to be added.
+	 * @throws Exception if the loot is already present in his favourite loot list.
 	 */
-	public void addFavLoot(int loot, int limit) throws Exception {
-		if(loot <= 0 || loot > limit) {
-			this.favList.clear();
-			throw new Exception("[Error] Can't add in the favourite loot list : the loot " + loot + " is out of range ! " +
-					"The favList is cleaned, please re-enter the pirate's favList.");
-		} else if(favList.contains(loot)) {
+	public void addFavLoot(Loot loot) throws Exception {
+		if(favList.contains(loot)) {
 			this.favList.clear();
 			throw new Exception("[Error] Can't add in the favourite loot list : the loot " + loot + " is already added ! " +
 					"The favList is cleaned, please re-enter the pirate's favList.");
@@ -110,7 +100,7 @@ public class Pirate {
 	 *
 	 * @return a clone of the favList.
 	 */
-	public List<Integer> getFavList() {
+	public List<Loot> getFavList() {
 		return new ArrayList<>(favList);
 	}
 
@@ -120,13 +110,14 @@ public class Pirate {
 	 *
 	 * @return the sub-list of loot that the pirate would have preferred to have.
 	 */
-	public List<Integer> getMoreFavList() {
-		int lootIdx = (this.loot >= 0) ? favList.indexOf(this.loot) : favList.size();
+	public List<Loot> getMoreFavList() {
+		int lootIdx = (this.loot != null) ? favList.indexOf(this.loot) : favList.size();
 		return favList.subList(0, lootIdx);
 	}
 
 	@Override
 	public String toString() {
-		return "Pirate{" + "id=" + id + ", name=" + name + ", loot=" + loot + ", favList=" + favList + '}';
+		String lootInfo = (loot != null) ? "" + loot.getId() : "null";
+		return "Pirate{" + "id=" + id + ", name=" + name + ", loot=" + lootInfo + ", favList=" + favList + '}';
 	}
 }

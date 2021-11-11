@@ -1,5 +1,6 @@
 package appli;
 
+import java.io.File;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -14,27 +15,33 @@ public class Main {
 	public static final int NB_PIRATE_MAX = 26;
 
 	public static void main(String[] args) {
-		Crew crew = new Crew(); // P2
-//		File f = new File("D:/xiumi/Documents/L3_Info/Prog_Av_App/Projets/simpleTest.txt");
-//		String inputString = Translator.translate(f, crew);
-//		System.out.println(inputString); // DEBUG
-////		Scanner sc = new Scanner(new File("D:/xiumi/Documents/L3_Info/Prog_Av_App/Projets/simpleTest.txt"));
-//		Scanner fileScanner = new Scanner(inputString); // TODO solution temporaire
-//
-//		// P1 ---
-////		Scanner sc = new Scanner(System.in);
-////		int nbPirate = enterNbPirate(sc);
-////		Crew crew = new Crew(nbPirate);
-//		// End P1 ---
-//
-//		// ajout des relations
-//		menu(crew, fileScanner, 1);  // display the menu 1
-//		fileScanner.close();
-		Scanner sc = new Scanner(System.in);
+		// P2
+		Crew crew = new Crew();
+		File f = new File("path/to/datafile.txt");
+		try {
+			String inputString = Translator.translate(f, crew);
+			System.out.println(inputString); // DEBUG
+			Scanner fileScanner = new Scanner(inputString);
+			// adding relationships & loot preference
+			menu(crew, fileScanner, 1);  // display the menu 1
+			fileScanner.close();
+		} catch(Exception e) {
+			System.out.println("[Error] " + e.getMessage());
+			return; // stop the program
+		}
 
+		// Display & manage the main menu
+		Scanner sc = new Scanner(System.in);
 		menu(crew, sc, 3);
 		sc.close();
 
+		// P1 ---
+		/*Scanner sc = new Scanner(f);
+		int nbPirate = enterNbPirate(sc);
+		Crew crew = new Crew(nbPirate);
+		menu(crew, sc, 1);  // display the menu 1
+		menu(crew, sc, 2);  // display the menu 1
+		sc.close();*/
 	}
 
 	/**
@@ -63,7 +70,7 @@ public class Main {
 	 *
 	 * @param crew    the pirate crew to manage.
 	 * @param sc      a scanner for text input and output.
-	 * @param menuNum true for display and manage the menu 1, else false for the menu 2. // TODO cahnge this
+	 * @param menuNum the number of the menu to be displayed and managed. // TODO change this
 	 */
 	private static void menu(Crew crew, Scanner sc, int menuNum) {
 		boolean isEnd = false;
@@ -128,15 +135,10 @@ public class Main {
 			case 2: // add pref
 				System.out.print("Enter the preferences of a pirate (Ex: A 1 2 3 4) : ");
 				String pName = sc.next().toUpperCase();
-				Pirate p = crew.getPirate(pName);
-				if(p != null) {
-					for(int i = 0; i < crew.getNbPirate(); i++) {
-						p.addFavLoot(sc.nextInt(), crew.getNbPirate());
-					}
-					System.out.println("Success of adding pref : " + p); // display pirate's info
-				} else {
-					System.out.println("Pirate " + pName + " doesn't exist !");
+				for(int i = 0; i < crew.getNbPirate(); i++) {
+					crew.addFavLootToPirate(pName, sc.nextInt());
 				}
+				System.out.println("Success of adding pref : " + crew.getPirate(pName)); // display pirate's info
 				break;
 			case 0: // end
 				crew.allPirateFavListIsComplete();
@@ -213,7 +215,7 @@ public class Main {
 			switch(choice) {
 				case 1: // resolve auto
 					System.out.println("Resolution automatique.");
-//					crew.autoLootAttribution(); // debug
+					crew.autoLootAttribution();
 					break;
 				case 2: // resolve manuelle
 					System.out.println("Resolution manuelle.");

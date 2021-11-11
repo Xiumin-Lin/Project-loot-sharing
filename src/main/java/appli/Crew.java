@@ -22,28 +22,29 @@ public class Crew {
 	 * Else it's ZERO.
 	 */
 	private ArrayList<ArrayList<Integer>> relationship;
-	private int nbPirate;
 	private HashMap<String, Pirate> equipage;
-	private ArrayList<Loot> lootList;
+	private ArrayList<Loot> lootToShareList;
 
+	/**
+	 * TODO
+	 */
 	public Crew() {
-		this.nbPirate = 0;
 		this.relationship = new ArrayList<>();
 		this.equipage = new HashMap<>();
-		this.lootList = new ArrayList<>();
+		this.lootToShareList = new ArrayList<>();
 	}
 
 	/**
 	 * Constructor who initializes a crew of n members and where nobody hates anybody.
+	 * Assigns an automatic name to the pirate. Ex : A, B, C, etc.
 	 *
 	 * @param n the number of pirates in the crew.
 	 */
 	public Crew(int n) {
 		this();
-		this.nbPirate = n;
 		// creation of all the pirates of the equipage
 		System.out.println("Initialization of the crew : "); // DEBUG
-		for(int i = 0; i < nbPirate; i++) {
+		for(int i = 0; i < n; i++) {
 			String lettre = "" + (char) (A_IN_ASCII + i);
 			equipage.put(lettre, new Pirate(lettre));
 			System.out.println("\t" + equipage.get(lettre)); // DEBUG
@@ -63,7 +64,6 @@ public class Crew {
 				relationship.get(i).add(ZERO);
 			}
 		}
-//		showRelation(); // DEBUG
 	}
 
 	/**
@@ -85,7 +85,7 @@ public class Crew {
 	 * @return the number of pirates in the crew.
 	 */
 	public int getNbPirate() {
-		return nbPirate;
+		return equipage.size();
 	}
 
 	/**
@@ -112,7 +112,6 @@ public class Crew {
 			relationship.get(pirateID).set(pirateID2, ONE);
 			relationship.get(pirateID2).set(pirateID, ONE);
 			System.out.println("Success in adding the relationship between " + a + " and " + b + ".");
-//			showRelation(); // DEBUG
 		} else {
 			throw new Exception("[Error] Pirate " + a + " or " + b + " doesn't exist !");
 		}
@@ -131,18 +130,18 @@ public class Crew {
 	 */
 	public void showCrewLoot() {
 		System.out.println("\nThe loot of each pirate : ");
-		equipage.forEach((s, pirate) -> System.out.println(s + ":o" + pirate.getLoot()));
+		equipage.forEach((s, pirate) -> System.out.println(s + ":o" + pirate.getLoot().getId()));
 	}
 
 	/**
 	 * Check if all pirate favourite loot list is complete.
 	 *
+	 * @return true if all pirate favourite loot list is complete, else false.
 	 * @throws Exception if there is at least one list that is incomplete.
-	 * @return
 	 */
 	public boolean allPirateFavListIsComplete() throws Exception {
 		for(Pirate p : equipage.values()) {
-			if(!p.favListIsComplete(nbPirate)) {
+			if(!p.favListIsComplete(this.getNbPirate())) {
 				throw new Exception("[Error] Favourite loot list of the pirate " + p.getName() + " is not complete !");
 			}
 		}
@@ -154,15 +153,13 @@ public class Crew {
 	 * Automatic loot attribution to each member of the crew.
 	 * Each pirate (in the order of their ID) receives his favourite object if it is available, otherwise
 	 * his second favourite item if it is available, etc.
-	 *
-	 * @throws Exception if a loot to attribuate is not in the list of loot to be shared.
 	 */
-	public void autoLootAttribution() throws Exception {
-		List<Integer> givedLootList = new ArrayList<>();
+	public void autoLootAttribution() {
+		List<Loot> givedLootList = new ArrayList<>();
 		for(Pirate p : equipage.values()) {
-			for(int loot : p.getFavList()) {
+			for(Loot loot : p.getFavList()) {
 				if(!givedLootList.contains(loot)) {
-					p.setLoot(loot, nbPirate);
+					p.setLoot(loot);
 					givedLootList.add(loot);
 					break;
 				}
@@ -181,24 +178,13 @@ public class Crew {
 		Pirate p = equipage.get(a);
 		Pirate p2 = equipage.get(b);
 		if(p != null && p2 != null) {
-			int tmp = p2.getLoot();
-			p2.setLoot(p.getLoot(), nbPirate);
-			p.setLoot(tmp, nbPirate);
+			Loot tmp = p2.getLoot();
+			p2.setLoot(p.getLoot());
+			p.setLoot(tmp);
 			System.out.println("Successful exchange of loot between " + a + " and " + b + ".");
 		} else {
 			throw new Exception("[Error] Pirate " + a + " or " + b + " doesn't exist !");
 		}
-	}
-
-	/**
-	 * Returns the pirate with the specified ID. OR null if not found.
-	 *
-	 * @param id the pirate's ID that we are looking for.
-	 * @return the wanted pirate ou null if not found.
-	 */
-	public Pirate findPirateByID(int id) {
-		String name = "" + (char) (A_IN_ASCII + id);
-		return equipage.getOrDefault(name, null);
 	}
 
 	/**
@@ -209,16 +195,15 @@ public class Crew {
 	 */
 	public int calcultateCost() {
 		int cost = 0;
-		for(Pirate p : equipage.values()) {     // pour chaque pirate
-			List<Integer> morePrefList = p.getMoreFavList(); // recup list des loots qu'il aurait pref avoir
-			if(!morePrefList.isEmpty()) {       // si la liste n'est pas vide
-				for(int i = 0; i < nbPirate; i++) { // pour chaque pirate
-					if(i != p.getId() && relationship.get(p.getId()).get(i) != ZERO) { // s'il est diff de p && que p le desteste
-						Pirate dislikeP = findPirateByID(i);    // recup le pirate detesté
-						if(dislikeP != null && morePrefList.contains(dislikeP.getLoot())) { // s'il est pas null && qu'il a l'obj pref de p
-							cost++; // on increment de 1
-							break;
-						}
+		for(Pirate p : equipage.values()) {                 // for each pirate
+			List<Loot> morePrefList = p.getMoreFavList();   // get the list of loots he would have preferred to have
+			if(!morePrefList.isEmpty()) {                   // if it's not empty
+				for(Pirate anotherP : equipage.values()) {  // again for each pirate
+					// if "anotherP" is not "p", they hate each other, and he has an object that "p" prefers
+					if(p.getId() != anotherP.getId() && relationship.get(p.getId()).get(anotherP.getId()) != ZERO
+							&& morePrefList.contains(anotherP.getLoot())) {
+						cost++; // increment by 1
+						break;
 					}
 				}
 			}
@@ -226,28 +211,56 @@ public class Crew {
 		return cost;
 	}
 
-	public void addPirate(String name) {
-		Pirate p = this.equipage.put(name, new Pirate(name));
-		if(p == null) {
-			this.nbPirate++;
-			this.addInRelation();
-		} else System.out.println("Pirate " + name + " is already added !");
-		showRelation(); // debug
+	/**
+	 * Add a pirate to the crew. The relationship table is updated automatically.
+	 *
+	 * @param name the pirate's name.
+	 */
+	public void addPirate(String name) throws Exception {
+		if(!equipage.containsKey(name)) {
+			equipage.put(name, new Pirate(name));
+			addPirateInRelationship();
+		} else throw new Exception("[Error] Pirate " + name + " is already added !");
+		showRelation(); // DEBUG
 	}
 
-	private void addInRelation() { // TODO avoir un nom plus clair
+	/**
+	 * Add a new pirate to the relationship matrix.
+	 * By default, his relationships are set to ZERO, which means that nobody hates him.
+	 */
+	private void addPirateInRelationship() {
 		relationship.add(new ArrayList<>());
-		for(int i = 0; i < nbPirate; i++) { // TODO modifier le nbPirate en equipage.size()
+		for(int i = 0; i < getNbPirate(); i++) {
 			relationship.get(i).add(ZERO);
-			if(i == nbPirate - 1) {
-				for(int j = 1; j < nbPirate; j++) {
+			if(i == getNbPirate() - 1) {
+				for(int j = 1; j < getNbPirate(); j++) {
 					relationship.get(i).add(ZERO);
 				}
 			}
 		}
 	}
 
+	/**
+	 * Add a new loot in lootToShareList.
+	 *
+	 * @param label loot's label.
+	 */
 	public void addLoot(String label) {
-		lootList.add(new Loot(label));
+		lootToShareList.add(new Loot(label));
+	}
+
+	/**
+	 * Add a favourite loot in the favList of a pirate.
+	 * It's added at the last position in the list.
+	 *
+	 * @param pirateName the name of the pirate concerned.
+	 * @param lootIdx    the loot's index in the lootToShareList.
+	 * @throws Exception the loot is not in the lootToShareList
+	 *                   or is already present in his favourite loot list.
+	 */
+	public void addFavLootToPirate(String pirateName, int lootIdx) throws Exception {
+		Pirate p = getPirate(pirateName);
+		if(p != null) p.addFavLoot(lootToShareList.get(lootIdx - 1));
+		else throw new Exception("[Error] Pirate " + pirateName + " doesn't exist !");
 	}
 }

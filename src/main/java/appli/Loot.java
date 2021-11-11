@@ -1,20 +1,25 @@
 package appli;
 
 public class Loot {
-	private static int id = 1;
-	private int num;
+	private static int num = 1;
+	private final int id;
 	private String label;
 
 	public Loot(String label){
-		this.num = id++;
+		this.id = num++;
 		this.label = label;
 	}
 
-	public int getNum() {
-		return num;
+	public int getId() {
+		return id;
 	}
 
 	public String getLabel() {
 		return label;
+	}
+
+	@Override
+	public String toString() {
+		return "o" + id + ":" + label;
 	}
 }
