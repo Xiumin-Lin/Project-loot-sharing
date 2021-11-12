@@ -17,10 +17,10 @@ public class Main {
 	public static void main(String[] args) {
 		// P2
 		Crew crew = new Crew();
-		File f = new File("path/to/datafile.txt");
+		File f = new File("path/to/texte.txt");
 		try {
 			String inputString = Translator.translate(f, crew);
-			System.out.println(inputString); // DEBUG
+			System.out.println("--- DEBUG ---\n" + inputString + "--- END ---"); // DEBUG
 			Scanner fileScanner = new Scanner(inputString);
 			// adding relationships & loot preference
 			menu(crew, fileScanner, 1);  // display the menu 1
@@ -31,6 +31,7 @@ public class Main {
 		}
 
 		// Display & manage the main menu
+		crew.showRelation();
 		Scanner sc = new Scanner(System.in);
 		menu(crew, sc, 3);
 		sc.close();
@@ -142,9 +143,9 @@ public class Main {
 				break;
 			case 0: // end
 				crew.allPirateFavListIsComplete();
-				System.out.println("Exit !");
-				System.out.println("Automatic Loot Attribution...");
-				crew.autoLootAttribution();
+//				System.out.println("Exit !");
+//				System.out.println("Automatic Loot Attribution...");
+//				crew.autoLootAttribution();
 				crew.showCrew(); // DEBUG
 				return true; // isEnd = true
 			default:
@@ -210,26 +211,25 @@ public class Main {
 	}
 
 	public static boolean menu3Choice(Crew crew, Scanner sc, int choice) throws Exception {
-		if(crew.allPirateFavListIsComplete()) {
-			crew.showCrew(); // DEBUG
-			switch(choice) {
-				case 1: // resolve auto
-					System.out.println("Resolution automatique.");
-					crew.autoLootAttribution();
-					break;
-				case 2: // resolve manuelle
-					System.out.println("Resolution manuelle.");
-					menu(crew, sc, 2); // invoque menu 2
-					break;
-				case 3: // sauvegarde
-					System.out.println("Save.");
-					break;
-				case 0: // End
-					System.out.println("End of the program.");
-					return true;
-				default:
-					System.out.println("Invalid Input ! Retry !");
-			}
+		System.out.println();
+		switch(choice) {
+			case 1: // resolve auto
+				System.out.println("Resolution automatique :");
+				crew.autoLootAttribution();
+				crew.showCrew();
+				break;
+			case 2: // resolve manuelle
+				System.out.println("Resolution manuelle :");
+				menu(crew, sc, 2); // invoque menu 2
+				break;
+			case 3: // sauvegarde
+				System.out.println("Save.");
+				break;
+			case 0: // End
+				System.out.println("End of the program.");
+				return true;
+			default:
+				System.out.println("Invalid Input ! Retry !");
 		}
 		return false;
 	}

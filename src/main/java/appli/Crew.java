@@ -263,4 +263,18 @@ public class Crew {
 		if(p != null) p.addFavLoot(lootToShareList.get(lootIdx - 1));
 		else throw new Exception("[Error] Pirate " + pirateName + " doesn't exist !");
 	}
+
+	/**
+	 *
+	 * @param nomObj
+	 * @return
+	 */
+	public int findLootIdByName(String nomObj) {
+		for(Loot l : lootToShareList) {
+			if(l.getLabel().equals(nomObj)) {
+				return l.getId();
+			}
+		}
+		return 0;
+	}
 }
