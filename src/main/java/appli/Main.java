@@ -1,5 +1,9 @@
 package appli;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -14,14 +18,37 @@ public class Main {
 	public static final int NB_PIRATE_MAX = 26;
 
 	public static void main(String[] args) {
+		// P2
 		Scanner sc = new Scanner(System.in);
+		System.out.print("The path to the file : ");
+		String filePath = sc.nextLine(); // TODO Gerer les erreurs de saisi
+		Crew crew = new Crew();
+		File f = new File(filePath);
+		try {
+			String inputString = Translator.translate(f, crew);
+			System.out.println("---- DEBUG ----\n" + inputString + "---- END ----"); // DEBUG
+			Scanner fileScanner = new Scanner(inputString);
+			// adding relationships & loot preference
+			menu(crew, fileScanner, 1);  // display the menu 1
+			fileScanner.close();
+		} catch(Exception e) {
+			System.out.println("[Error] " + e.getMessage());
+			return; // stop the program
+		}
+
+		// Display & manage the main menu
+		crew.showRelation();
+
+		menu(crew, sc, 3);
+		sc.close();
+
+		// P1 ---
+		/*Scanner sc = new Scanner(f);
 		int nbPirate = enterNbPirate(sc);
 		Crew crew = new Crew(nbPirate);
-
-		menu(crew, sc, true);   // true display the menu 1
-		menu(crew, sc, false);  // false display the menu 2
-
-		sc.close();
+		menu(crew, sc, 1);  // display the menu 1
+		menu(crew, sc, 2);  // display the menu 1
+		sc.close();*/
 	}
 
 	/**
@@ -50,16 +77,29 @@ public class Main {
 	 *
 	 * @param crew    the pirate crew to manage.
 	 * @param sc      a scanner for text input and output.
-	 * @param isMenu1 true for display and manage the menu 1, else false for the menu 2.
+	 * @param menuNum the number of the menu to be displayed and managed. // TODO change this
 	 */
-	private static void menu(Crew crew, Scanner sc, boolean isMenu1) {
+	private static void menu(Crew crew, Scanner sc, int menuNum) {
 		boolean isEnd = false;
 		do {
-			if(isMenu1) menu1Text();
-			else menu2Text();
 			try {
+				if(menuNum == 2) menu2Text();
+				else if(menuNum == 3) menu3Text();
 				int choice = sc.nextInt();
-				isEnd = (isMenu1) ? menu1Choice(crew, sc, choice) : menu2Choice(crew, sc, choice);
+				switch(menuNum) {
+					case 1:
+						isEnd = menu1Choice(crew, sc, choice);
+						break;
+					case 2:
+						isEnd = menu2Choice(crew, sc, choice);
+						continue;
+					case 3:
+						isEnd = menu3Choice(crew, sc, choice);
+						break;
+					default:
+						System.out.println("Invalid menu number !");
+						return;
+				}
 			} catch(InputMismatchException e) {
 				System.out.println("I want a integer !");
 			} catch(Exception e) {
@@ -102,21 +142,16 @@ public class Main {
 			case 2: // add pref
 				System.out.print("Enter the preferences of a pirate (Ex: A 1 2 3 4) : ");
 				String pName = sc.next().toUpperCase();
-				Pirate p = crew.getPirate(pName);
-				if(p != null) {
-					for(int i = 0; i < crew.getNbPirate(); i++) {
-						p.addFavLoot(sc.nextInt(), crew.getNbPirate());
-					}
-					System.out.println("Success of adding pref : " + p); // display pirate's info
-				} else {
-					System.out.println("Pirate " + pName + " doesn't exist !");
+				for(int i = 0; i < crew.getNbPirate(); i++) {
+					crew.addFavLootToPirate(pName, sc.nextInt());
 				}
+				System.out.println("Success of adding pref : " + crew.getPirate(pName)); // display pirate's info
 				break;
 			case 0: // end
 				crew.allPirateFavListIsComplete();
-				System.out.println("Exit !");
-				System.out.println("Automatic Loot Attribution...");
-				crew.autoLootAttribution();
+//				System.out.println("Exit !");
+//				System.out.println("Automatic Loot Attribution...");
+//				crew.autoLootAttribution();
 				crew.showCrew(); // DEBUG
 				return true; // isEnd = true
 			default:
@@ -159,6 +194,48 @@ public class Main {
 			case 2: // Cost
 				System.out.println("The cost : " + crew.calcultateCost());
 				crew.showCrewLoot();
+				break;
+			case 0: // End
+//				System.out.println("End of the program."); // P1
+				return true;
+			default:
+				System.out.println("Invalid Input ! Retry !");
+		}
+		return false;
+	}
+
+	/**
+	 * Display the text of menu 3 for exchanging an object and display the cost.
+	 */
+	public static void menu3Text() {
+		System.out.println("\nMenu Principal :");
+		System.out.println("\t(1) Resolution automatique");
+		System.out.println("\t(2) Resolution manuelle");
+		System.out.println("\t(3) Sauvegarde");
+		System.out.println("\t(0) End");
+		System.out.print(">>> ");
+	}
+
+	public static boolean menu3Choice(Crew crew, Scanner sc, int choice) throws Exception {
+		System.out.println();
+		switch(choice) {
+			case 1: // Resolve auto
+				System.out.println("Resolution automatique :");
+				crew.autoLootAttribution();
+				crew.showCrew();
+				break;
+			case 2: // Resolve manuelle
+				System.out.println("Resolution manuelle :");
+				menu(crew, sc, 2); // call menu 2
+				break;
+			case 3: // Save
+				System.out.print("---- Saving ----\nEnter the backup file name : ");
+				String saveFileName = sc.next(); // TODO gere les erreurs
+				try(BufferedWriter bW = new BufferedWriter(new FileWriter(saveFileName));
+				    PrintWriter pW = new PrintWriter(bW)) {
+					pW.print(crew.getCrewLoot());
+					System.out.println("---- Saving successful ----");
+				} catch(Exception e) {System.out.println("Saving Error : " + e);}
 				break;
 			case 0: // End
 				System.out.println("End of the program.");
