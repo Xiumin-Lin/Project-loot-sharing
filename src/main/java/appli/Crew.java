@@ -126,11 +126,20 @@ public class Crew {
 	}
 
 	/**
+	 * @return the list of pirates and the loot they have in a String.
+	 */
+	public String getCrewLoot() {
+		StringBuilder res = new StringBuilder();
+		equipage.forEach((s, pirate) -> res.append(s).append(":o").append(pirate.getLoot().getId()).append("\n"));
+		return res.toString();
+	}
+
+	/**
 	 * Display the list of pirates and the loot they have.
 	 */
 	public void showCrewLoot() {
 		System.out.println("\nThe loot of each pirate : ");
-		equipage.forEach((s, pirate) -> System.out.println(s + ":o" + pirate.getLoot().getId()));
+		System.out.print(getCrewLoot());
 	}
 
 	/**
@@ -265,16 +274,17 @@ public class Crew {
 	}
 
 	/**
+	 * Searches for and returns the ID of the loot with the specified name. Returns -1 if not found.
 	 *
-	 * @param nomObj
-	 * @return
+	 * @param lootName the loot's name
+	 * @return the id of the loot with the specified name. If not found, return -1.
 	 */
-	public int findLootIdByName(String nomObj) {
+	public int findLootIdByName(String lootName) {
 		for(Loot l : lootToShareList) {
-			if(l.getLabel().equals(nomObj)) {
+			if(l.getLabel().equals(lootName)) {
 				return l.getId();
 			}
 		}
-		return 0;
+		return -1;
 	}
 }

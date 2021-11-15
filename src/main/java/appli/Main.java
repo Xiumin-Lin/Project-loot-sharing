@@ -1,6 +1,9 @@
 package appli;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -16,11 +19,14 @@ public class Main {
 
 	public static void main(String[] args) {
 		// P2
+		Scanner sc = new Scanner(System.in);
+		System.out.print("The path to the file : ");
+		String filePath = sc.nextLine(); // TODO Gerer les erreurs de saisi
 		Crew crew = new Crew();
-		File f = new File("path/to/texte.txt");
+		File f = new File(filePath);
 		try {
 			String inputString = Translator.translate(f, crew);
-			System.out.println("--- DEBUG ---\n" + inputString + "--- END ---"); // DEBUG
+			System.out.println("---- DEBUG ----\n" + inputString + "---- END ----"); // DEBUG
 			Scanner fileScanner = new Scanner(inputString);
 			// adding relationships & loot preference
 			menu(crew, fileScanner, 1);  // display the menu 1
@@ -32,7 +38,7 @@ public class Main {
 
 		// Display & manage the main menu
 		crew.showRelation();
-		Scanner sc = new Scanner(System.in);
+
 		menu(crew, sc, 3);
 		sc.close();
 
@@ -213,17 +219,23 @@ public class Main {
 	public static boolean menu3Choice(Crew crew, Scanner sc, int choice) throws Exception {
 		System.out.println();
 		switch(choice) {
-			case 1: // resolve auto
+			case 1: // Resolve auto
 				System.out.println("Resolution automatique :");
 				crew.autoLootAttribution();
 				crew.showCrew();
 				break;
-			case 2: // resolve manuelle
+			case 2: // Resolve manuelle
 				System.out.println("Resolution manuelle :");
-				menu(crew, sc, 2); // invoque menu 2
+				menu(crew, sc, 2); // call menu 2
 				break;
-			case 3: // sauvegarde
-				System.out.println("Save.");
+			case 3: // Save
+				System.out.print("---- Saving ----\nEnter the backup file name : ");
+				String saveFileName = sc.next(); // TODO gere les erreurs
+				try(BufferedWriter bW = new BufferedWriter(new FileWriter(saveFileName));
+				    PrintWriter pW = new PrintWriter(bW)) {
+					pW.print(crew.getCrewLoot());
+					System.out.println("---- Saving successful ----");
+				} catch(Exception e) {System.out.println("Saving Error : " + e);}
 				break;
 			case 0: // End
 				System.out.println("End of the program.");
