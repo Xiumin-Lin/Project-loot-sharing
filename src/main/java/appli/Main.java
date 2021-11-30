@@ -2,6 +2,7 @@ package appli;
 
 import pirate.Crew;
 import util.Menu;
+import util.MenuManager;
 import util.Translator;
 
 import java.io.File;
@@ -33,7 +34,7 @@ public class Main {
 			System.out.println("---- DEBUG ----\n" + inputString + "---- END ----"); // DEBUG
 			Scanner fileScanner = new Scanner(inputString);
 			// adding relationships & loot preference
-			Menu.showMenu(1, crew, fileScanner);  // display the menu 1
+			MenuManager.showMenu(Menu.FIRST, crew, fileScanner);  // display the menu 1
 			fileScanner.close();
 		} catch(Exception e) {
 			System.out.println("[Error] " + e.getMessage() + "(" + e + ")");
@@ -42,7 +43,7 @@ public class Main {
 
 		// Display & manage the main menu
 		crew.showRelation();
-		Menu.showMenu(3, crew, sc); // display the menu 3
+		MenuManager.showMenu(Menu.MAIN, crew, sc); // display the menu 3
 		sc.close();
 	}
 

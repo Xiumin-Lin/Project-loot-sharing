@@ -131,7 +131,15 @@ public class Crew {
 	 */
 	public String getCrewLoot() {
 		StringBuilder res = new StringBuilder();
-		equipage.forEach((s, pirate) -> res.append(s).append(":").append(pirate.getLoot().getLabel()).append("\n"));
+		equipage.forEach((s, pirate) -> {
+			res.append(s).append(":");
+			if(pirate.getLoot() != null) res.append(pirate.getLoot().getLabel());
+			else {
+				System.out.println("[Info] " + pirate.getName() + " doesn't have a loot.");
+				res.append("null");
+			}
+			res.append("\n");
+		});
 		return res.toString();
 	}
 
