@@ -32,7 +32,7 @@ public class Main {
 			menu(crew, fileScanner, 1);  // display the menu 1
 			fileScanner.close();
 		} catch(Exception e) {
-			System.out.println("[Error] " + e.getMessage());
+			System.out.println("[Error] " + e.getMessage() + "(" + e + ")");
 			return; // stop the program
 		}
 
@@ -41,14 +41,6 @@ public class Main {
 
 		menu(crew, sc, 3);
 		sc.close();
-
-		// P1 ---
-		/*Scanner sc = new Scanner(f);
-		int nbPirate = enterNbPirate(sc);
-		Crew crew = new Crew(nbPirate);
-		menu(crew, sc, 1);  // display the menu 1
-		menu(crew, sc, 2);  // display the menu 1
-		sc.close();*/
 	}
 
 	/**
@@ -135,13 +127,13 @@ public class Main {
 		switch(choice) {
 			case 1: // add relation
 				System.out.print("Enter the letters of the 2 pirates who dislike each other ! (Ex: A B) : ");
-				String a = sc.next().toUpperCase();
-				String b = sc.next().toUpperCase();
+				String a = sc.next();
+				String b = sc.next();
 				crew.addRelation(a, b);
 				break;
 			case 2: // add pref
 				System.out.print("Enter the preferences of a pirate (Ex: A 1 2 3 4) : ");
-				String pName = sc.next().toUpperCase();
+				String pName = sc.next();
 				for(int i = 0; i < crew.getNbPirate(); i++) {
 					crew.addFavLootToPirate(pName, sc.nextInt());
 				}
@@ -186,8 +178,8 @@ public class Main {
 		switch(choice) {
 			case 1: // Exchange
 				System.out.print("Enter the letters of the 2 pirates who have to exchange their loots ! (Ex: A B) : ");
-				String a = sc.next().toUpperCase();
-				String b = sc.next().toUpperCase();
+				String a = sc.next();
+				String b = sc.next();
 				crew.exchangeLoot(a, b);
 				crew.showCrewLoot();
 				break;
@@ -223,6 +215,7 @@ public class Main {
 				System.out.println("Resolution automatique :");
 				crew.autoLootAttribution();
 				crew.showCrew();
+				System.out.println("The cost : " + crew.calcultateCost());
 				break;
 			case 2: // Resolve manuelle
 				System.out.println("Resolution manuelle :");

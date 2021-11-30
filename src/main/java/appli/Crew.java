@@ -130,7 +130,7 @@ public class Crew {
 	 */
 	public String getCrewLoot() {
 		StringBuilder res = new StringBuilder();
-		equipage.forEach((s, pirate) -> res.append(s).append(":o").append(pirate.getLoot().getId()).append("\n"));
+		equipage.forEach((s, pirate) -> res.append(s).append(":").append(pirate.getLoot().getLabel()).append("\n"));
 		return res.toString();
 	}
 
