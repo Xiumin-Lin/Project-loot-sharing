@@ -1,4 +1,4 @@
-package appli;
+package pirate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +16,8 @@ public class Crew {
 	private static final int ZERO = 0;
 	private static final int ONE = 1;
 	private static final int A_IN_ASCII = 65;
+	private static final String CAN_T_FIND_THE_PIRATE = "[Error] Can't find the Pirate : ";
+
 	/**
 	 * An adjacency matrix that represents the agreement between each member of the crew.
 	 * If 2 pirates, i and j, do not like each other, relationship.get(i).get(j) = ONE.
@@ -26,7 +28,7 @@ public class Crew {
 	private ArrayList<Loot> lootToShareList;
 
 	/**
-	 * TODO
+	 * Basic Crew Constructor
 	 */
 	public Crew() {
 		this.relationship = new ArrayList<>();
@@ -47,7 +49,6 @@ public class Crew {
 		for(int i = 0; i < n; i++) {
 			String lettre = "" + (char) (A_IN_ASCII + i);
 			equipage.put(lettre, new Pirate(lettre));
-			System.out.println("\t" + equipage.get(lettre)); // DEBUG
 		}
 		initCrewRelation(n);
 	}
@@ -113,7 +114,7 @@ public class Crew {
 			relationship.get(pirateID2).set(pirateID, ONE);
 			System.out.println("Success in adding the relationship between " + a + " and " + b + ".");
 		} else {
-			throw new Exception("[Error] Pirate " + a + " or " + b + " doesn't exist !");
+			throw new Exception(CAN_T_FIND_THE_PIRATE + a + " or " + b);
 		}
 	}
 
@@ -145,13 +146,14 @@ public class Crew {
 	/**
 	 * Check if all pirate favourite loot list is complete.
 	 *
-	 * @return true if all pirate favourite loot list is complete, else false.
-	 * @throws Exception if there is at least one list that is incomplete.
+	 * @return true if all pirate favourite loot list is complete,
+	 * else false if there is at least one list that is incomplete
 	 */
-	public boolean allPirateFavListIsComplete() throws Exception {
+	public boolean allPirateFavListIsComplete() {
 		for(Pirate p : equipage.values()) {
 			if(!p.favListIsComplete(this.getNbPirate())) {
-				throw new Exception("[Error] Favourite loot list of the pirate " + p.getName() + " is not complete !");
+				System.out.println("[Error] Favourite loot list of the pirate " + p.getName() + " is not complete !");
+				return false;
 			}
 		}
 		return true;
@@ -192,7 +194,7 @@ public class Crew {
 			p.setLoot(tmp);
 			System.out.println("Successful exchange of loot between " + a + " and " + b + ".");
 		} else {
-			throw new Exception("[Error] Pirate " + a + " or " + b + " doesn't exist !");
+			throw new Exception(CAN_T_FIND_THE_PIRATE + a + " or " + b);
 		}
 	}
 
@@ -270,7 +272,7 @@ public class Crew {
 	public void addFavLootToPirate(String pirateName, int lootIdx) throws Exception {
 		Pirate p = getPirate(pirateName);
 		if(p != null) p.addFavLoot(lootToShareList.get(lootIdx - 1));
-		else throw new Exception("[Error] Pirate " + pirateName + " doesn't exist !");
+		else throw new Exception(CAN_T_FIND_THE_PIRATE + pirateName);
 	}
 
 	/**

@@ -1,0 +1,15 @@
+pirate(Amy).
+pirate(Bobby).
+pirate(Conny).
+pirate(Danny).
+objet(Or).
+objet(Diamand).
+objet(Perles).
+objet(Rubis).
+deteste(Amy,Bobby).
+deteste(Conny,Bobby).
+deteste(Danny,Bobby).
+preferences(Amy,Or,Diamand,Perles,Rubis).
+preferences(Bobby,Or,Perles,Diamand,Rubis).
+preferences(Conny,Perles,Diamand,Or,Rubis).
+preferences(Danny,Or,Rubis,Diamand,Perles).

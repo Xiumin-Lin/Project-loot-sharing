@@ -1,4 +1,4 @@
-package appli;
+package pirate;
 
 import java.util.ArrayList;
 import java.util.List;

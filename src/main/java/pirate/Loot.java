@@ -1,4 +1,4 @@
-package appli;
+package pirate;
 
 public class Loot {
 	private static int num = 1;
