@@ -168,7 +168,6 @@ public class Crew {
 	}
 
 	/**
-	 * // TODO PARTIE II Automatisation
 	 * Automatic loot attribution to each member of the crew.
 	 * Each pirate (in the order of their ID) receives his favourite object if it is available, otherwise
 	 * his second favourite item if it is available, etc.
@@ -185,6 +184,34 @@ public class Crew {
 			}
 		}
 	}
+
+	/**
+	 * // TODO PARTIE II Automatisation
+	 * @throws Exception
+	 */
+	public void autoLootAttributionSmart() {
+		autoLootAttribution();
+		int s1=calcultateCost();
+			for(Pirate p1 : equipage.values()) {
+				for(Pirate p2 : equipage.values()) {
+					if(p1.getId() != p2.getId() && relationship.get(p1.getId()).get(p2.getId()) != ZERO) {
+						try{
+							exchangeLoot(p1.getName(),p2.getName());
+							int s2=calcultateCost();
+							if(s2>s1) {
+								exchangeLoot(p1.getName(),p2.getName());
+							}
+							else {
+								s1=s2;
+							}
+							}catch(Exception e) {
+								System.out.println(e.getMessage());
+							}
+
+						}
+					}
+				}
+		}
 
 	/**
 	 * Exchange the loots of 2 pirates.

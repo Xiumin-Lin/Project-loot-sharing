@@ -97,9 +97,9 @@ public class MenuManager {
 				break;
 			case 0: // end
 				if(crew.allPirateFavListIsComplete()) {
-//					System.out.println("Exit !");
-//					System.out.println("Automatic Loot Attribution...");
-//					crew.autoLootAttribution();
+					System.out.println("Exit Menu 1!");
+					System.out.println("Automatic Loot Attribution...");
+					crew.autoLootAttribution();
 					crew.showCrew(); // DEBUG
 					return true;
 				}
@@ -146,7 +146,7 @@ public class MenuManager {
 				crew.showCrewLoot();
 				break;
 			case 0: // End
-//				System.out.println("End of the program.");
+				System.out.println("Exit Menu 2!");
 				return true;
 			default:
 				System.out.println(INVALID_INPUT_RETRY);
@@ -181,7 +181,7 @@ public class MenuManager {
 		switch(choice) {
 			case 1: // Resolve auto
 				System.out.println("Automatic resolution :");
-				crew.autoLootAttribution();
+				crew.autoLootAttributionSmart();
 				crew.showCrew();
 				System.out.println("The cost : " + crew.calcultateCost());
 				break;

@@ -5,6 +5,7 @@ import pirate.Crew;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Arrays;
 
 /**
  * A utility class to translate an instruction file to init a crew into
@@ -50,12 +51,11 @@ public class Translator {
 					case PREFERENCES:
 						String[] str = command[1].split("\\)");
 						String[] liste = str[0].split(",");
-						res.append("2 ")
-								.append(c.getPirate(liste[0]).getName()).append(" ")
-								.append(c.findLootIdByName(liste[1])).append(" ")
-								.append(c.findLootIdByName(liste[2])).append(" ")
-								.append(c.findLootIdByName(liste[3])).append(" ")
-								.append(c.findLootIdByName(liste[4])).append(System.lineSeparator());
+						res.append("2 ").append(c.getPirate(liste[0]).getName()).append(" ");
+						for(int i = 1; i < liste.length; i++) {
+							res.append(c.findLootIdByName(liste[i])).append(" ");
+						}
+						res.append(System.lineSeparator());
 						break;
 					default:
 						throw new Exception("[Error] ! Unknown command name : " + command[0]);
