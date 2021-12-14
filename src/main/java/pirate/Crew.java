@@ -1,8 +1,6 @@
 package pirate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * The Crew class represents a pirate crew and their agreements with each other.
@@ -12,10 +10,9 @@ import java.util.List;
  * @version 1.0
  */
 public class Crew {
-
-	private static final int ZERO = 0;
-	private static final int ONE = 1;
-	private static final int A_IN_ASCII = 65;
+	private static final Random RAND_GENERATOR = new Random();
+	private static final int LIKE = 0;
+	private static final int HATE = 1;
 	private static final String CAN_T_FIND_THE_PIRATE = "[Error] Can't find the Pirate : ";
 
 	/**
@@ -24,7 +21,7 @@ public class Crew {
 	 * Else it's ZERO.
 	 */
 	private ArrayList<ArrayList<Integer>> relationship;
-	private HashMap<String, Pirate> equipage;
+	private LinkedHashMap<String, Pirate> equipage;
 	private ArrayList<Loot> lootToShareList;
 
 	/**
@@ -32,39 +29,8 @@ public class Crew {
 	 */
 	public Crew() {
 		this.relationship = new ArrayList<>();
-		this.equipage = new HashMap<>();
+		this.equipage = new LinkedHashMap<>();
 		this.lootToShareList = new ArrayList<>();
-	}
-
-	/**
-	 * Constructor who initializes a crew of n members and where nobody hates anybody.
-	 * Assigns an automatic name to the pirate. Ex : A, B, C, etc.
-	 *
-	 * @param n the number of pirates in the crew.
-	 */
-	public Crew(int n) {
-		this();
-		// creation of all the pirates of the equipage
-		System.out.println("Initialization of the crew : "); // DEBUG
-		for(int i = 0; i < n; i++) {
-			String lettre = "" + (char) (A_IN_ASCII + i);
-			equipage.put(lettre, new Pirate(lettre));
-		}
-		initCrewRelation(n);
-	}
-
-	/**
-	 * Initialise the relationship table where nobody hates anybody.
-	 *
-	 * @param n the number of pirates in the crew.
-	 */
-	private void initCrewRelation(int n) {
-		for(int i = 0; i < n; i++) {
-			relationship.add(new ArrayList<>());
-			for(int j = 0; j < n; j++) {
-				relationship.get(i).add(ZERO);
-			}
-		}
 	}
 
 	/**
@@ -110,8 +76,8 @@ public class Crew {
 		if(equipage.containsKey(a) && equipage.containsKey(b)) {
 			int pirateID = equipage.get(a).getId();
 			int pirateID2 = equipage.get(b).getId();
-			relationship.get(pirateID).set(pirateID2, ONE);
-			relationship.get(pirateID2).set(pirateID, ONE);
+			relationship.get(pirateID).set(pirateID2, HATE);
+			relationship.get(pirateID2).set(pirateID, HATE);
 			System.out.println("Success in adding the relationship between " + a + " and " + b + ".");
 		} else {
 			throw new Exception(CAN_T_FIND_THE_PIRATE + a + " or " + b);
@@ -187,31 +153,33 @@ public class Crew {
 
 	/**
 	 * // TODO PARTIE II Automatisation
-	 * @throws Exception
 	 */
-	public void autoLootAttributionSmart() {
-		autoLootAttribution();
-		int s1=calcultateCost();
-			for(Pirate p1 : equipage.values()) {
-				for(Pirate p2 : equipage.values()) {
-					if(p1.getId() != p2.getId() && relationship.get(p1.getId()).get(p2.getId()) != ZERO) {
-						try{
-							exchangeLoot(p1.getName(),p2.getName());
-							int s2=calcultateCost();
-							if(s2>s1) {
-								exchangeLoot(p1.getName(),p2.getName());
-							}
-							else {
-								s1=s2;
-							}
-							}catch(Exception e) {
-								System.out.println(e.getMessage());
-							}
-
-						}
-					}
+	public void autoLootAttributionSmart(int nbAttempt) {
+		int s1 = calcultateCost();
+		List<Pirate> list = new ArrayList<>(equipage.values());
+		for(int i = 0; i < nbAttempt; i++) {
+			// get a random pirate p1
+			Pirate p1 = list.get(RAND_GENERATOR.nextInt(getNbPirate()));
+			// get a random pirate p2 that is a neighbour of p1
+			List<Pirate> listNeighbour = new ArrayList<>();
+			for(Pirate p : equipage.values()) {
+				if(p1.getId() != p.getId() && relationship.get(p1.getId()).get(p.getId()) != LIKE)
+					listNeighbour.add(p);
+			}
+			Pirate p2 = listNeighbour.get(RAND_GENERATOR.nextInt(listNeighbour.size()));
+			try {
+				exchangeLoot(p1.getName(), p2.getName());
+				int s2 = calcultateCost();
+				if(s2 > s1) {
+					exchangeLoot(p1.getName(), p2.getName());
+				} else {
+					s1 = s2;
 				}
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
 		}
+	}
 
 	/**
 	 * Exchange the loots of 2 pirates.
@@ -246,7 +214,7 @@ public class Crew {
 			if(!morePrefList.isEmpty()) {                   // if it's not empty
 				for(Pirate anotherP : equipage.values()) {  // again for each pirate
 					// if "anotherP" is not "p", they hate each other, and he has an object that "p" prefers
-					if(p.getId() != anotherP.getId() && relationship.get(p.getId()).get(anotherP.getId()) != ZERO
+					if(p.getId() != anotherP.getId() && relationship.get(p.getId()).get(anotherP.getId()) != LIKE
 							&& morePrefList.contains(anotherP.getLoot())) {
 						cost++; // increment by 1
 						break;
@@ -277,10 +245,10 @@ public class Crew {
 	private void addPirateInRelationship() {
 		relationship.add(new ArrayList<>());
 		for(int i = 0; i < getNbPirate(); i++) {
-			relationship.get(i).add(ZERO);
+			relationship.get(i).add(LIKE);
 			if(i == getNbPirate() - 1) {
 				for(int j = 1; j < getNbPirate(); j++) {
-					relationship.get(i).add(ZERO);
+					relationship.get(i).add(LIKE);
 				}
 			}
 		}

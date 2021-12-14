@@ -166,6 +166,8 @@ public class MenuManager {
 		System.out.print(">>> ");
 	}
 
+	private static final int NB_AUTOLOOT_ATTEMPT = 30;
+
 	/**
 	 * Display and manage the third menu choices (the main menu) about automatic or
 	 * manual resolution of the sharing loot problem and backup the solution.
@@ -181,7 +183,7 @@ public class MenuManager {
 		switch(choice) {
 			case 1: // Resolve auto
 				System.out.println("Automatic resolution :");
-				crew.autoLootAttributionSmart();
+				crew.autoLootAttributionSmart(NB_AUTOLOOT_ATTEMPT);
 				crew.showCrew();
 				System.out.println("The cost : " + crew.calcultateCost());
 				break;
