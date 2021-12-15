@@ -9,9 +9,14 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * A utility class to display and manage the different menus for the program
+ * MenuManager is a utility class that display and manage the different menus for the program.
+ * Check {@link Menu} for the different types of menu.
  */
 public class MenuManager {
+	/**
+	 * The number of attempt for the loot auto distribution algo : {@link pirate.Crew#autoLootAttributionSmart(int)}
+	 */
+	private static final int NB_AUTOLOOT_ATTEMPT = 1000;
 	private static final String EXIT_CHOICE = "\t(0) End";
 	private static final String INVALID_INPUT_RETRY = "Invalid Input ! Retry !";
 
@@ -26,6 +31,7 @@ public class MenuManager {
 	 * @param menu the type of menu to be displayed and managed.
 	 * @param crew the pirate crew to manage.
 	 * @param sc   a scanner for text input and output.
+	 * @see Menu
 	 */
 	public static void showMenu(Menu menu, Crew crew, Scanner sc) {
 		boolean isEnd = false;
@@ -58,24 +64,13 @@ public class MenuManager {
 	}
 
 	/**
-	 * Display the text of the menu 1 for relationship and favourite loot management.
-	 */
-	private static void menu1Text() {
-		System.out.println("\nMenu 1 :");
-		System.out.println("\t(1) Add a relationship");
-		System.out.println("\t(2) Adding preferences");
-		System.out.println(EXIT_CHOICE);
-		System.out.print(">>> ");
-	}
-
-	/**
 	 * Display and manage the first menu choices about relationship and favourite loot management.
-	 * Return true if the user has finished using menu 1, else return false.
+	 * Return true if the user has finished using {@link Menu#FIRST} (menu 2), else return false.
 	 *
 	 * @param crew   the pirate crew to manage.
 	 * @param sc     a scanner for text input and output.
-	 * @param choice action chosen for menu 1.
-	 * @return true if the user has finished using menu 1, else return false.
+	 * @param choice action chosen for {@link Menu#FIRST} (menu 2).
+	 * @return true if the user has finished using {@link Menu#FIRST} (menu 2), else return false.
 	 * @throws Exception if an error is made during the execution of the action chosen
 	 *                   by the user with a descriptive message.
 	 */
@@ -97,10 +92,9 @@ public class MenuManager {
 				break;
 			case 0: // end
 				if(crew.allPirateFavListIsComplete()) {
-					System.out.println("Exit Menu 1!");
-					System.out.println("Automatic Loot Attribution...");
+					System.out.println("Simple Automatic Loot Attribution...");
 					crew.autoLootAttribution();
-					crew.showCrew(); // DEBUG
+//					System.out.println("End menu 1");
 					return true;
 				}
 				break;
@@ -111,7 +105,7 @@ public class MenuManager {
 	}
 
 	/**
-	 * Display the text of menu 2 for exchanging an object and display the cost.
+	 * Display the text of {@link Menu#SECOND} (menu 2) for exchanging an object and display the cost.
 	 */
 	private static void menu2Text() {
 		System.out.println("\nMenu 2 :");
@@ -123,12 +117,12 @@ public class MenuManager {
 
 	/**
 	 * Display and manage the second menu choices about exchanging an object and display the cost.
-	 * Return true if the user has finished using menu 2, else return false.
+	 * Return true if the user has finished using {@link Menu#SECOND} (menu 2), else return false.
 	 *
 	 * @param crew   the pirate crew to manage.
 	 * @param sc     a scanner for text input and output.
-	 * @param choice action chosen for menu 2.
-	 * @return true if the user has finished using menu 2, else return false.
+	 * @param choice action chosen for {@link Menu#SECOND}.
+	 * @return true if the user has finished using {@link Menu#SECOND}, else return false.
 	 * @throws Exception if an error is made during the execution of the action chosen
 	 *                   by the user with a descriptive message.
 	 */
@@ -138,7 +132,7 @@ public class MenuManager {
 				System.out.print("Enter the letters of the 2 pirates who have to exchange their loots ! (Ex: A B) : ");
 				String a = sc.next();
 				String b = sc.next();
-				crew.exchangeLoot(a, b);
+				crew.exchangeLootWithResultMsg(a, b);
 				crew.showCrewLoot();
 				break;
 			case 2: // Cost
@@ -155,7 +149,7 @@ public class MenuManager {
 	}
 
 	/**
-	 * Display the text of menu 3 for exchanging an object and display the cost.
+	 * Display the text of {@link Menu#MAIN} (menu 3) for exchanging an object and display the cost.
 	 */
 	private static void menu3Text() {
 		System.out.println("\nMain menu :");
@@ -166,29 +160,28 @@ public class MenuManager {
 		System.out.print(">>> ");
 	}
 
-	private static final int NB_AUTOLOOT_ATTEMPT = 30;
-
 	/**
-	 * Display and manage the third menu choices (the main menu) about automatic or
+	 * Display and manage the third menu choices ({@link Menu#MAIN}) about automatic or
 	 * manual resolution of the sharing loot problem and backup the solution.
 	 * Return true if the user has finished using the main menu, else return false.
 	 *
 	 * @param crew   the pirate crew to manage.
 	 * @param sc     a scanner for text input and output.
-	 * @param choice action chosen for menu 3.
-	 * @return true if the user has finished using menu 3, else return false.
+	 * @param choice action chosen for {@link Menu#MAIN}.
+	 * @return true if the user has finished using {@link Menu#MAIN}, else return false.
 	 */
 	private static boolean menu3Choice(Crew crew, Scanner sc, int choice) {
 		System.out.println();
 		switch(choice) {
 			case 1: // Resolve auto
-				System.out.println("Automatic resolution :");
+				System.out.println("Smarter Automatic resolution :");
 				crew.autoLootAttributionSmart(NB_AUTOLOOT_ATTEMPT);
-				crew.showCrew();
 				System.out.println("The cost : " + crew.calcultateCost());
+				crew.showCrewLoot();
+//				crew.showCrew(); // debug
 				break;
 			case 2: // Resolve manuelle
-				System.out.println("Manual resolution :");
+				System.out.print("Manual resolution :");
 				showMenu(Menu.SECOND, crew, sc); // call menu 2
 				break;
 			case 3: // Backup
@@ -196,6 +189,7 @@ public class MenuManager {
 				String saveFileName = sc.next();
 				try(BufferedWriter bW = new BufferedWriter(new FileWriter(saveFileName));
 				    PrintWriter pW = new PrintWriter(bW)) {
+					pW.print("Cout=" + crew.calcultateCost() + '\n');
 					pW.print(crew.getCrewLoot());
 					System.out.println("---- Saving successful ----");
 				} catch(Exception e) {System.out.println("[Error] Failed Backup : " + e);}
