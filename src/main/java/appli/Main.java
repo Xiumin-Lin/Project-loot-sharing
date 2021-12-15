@@ -3,7 +3,7 @@ package appli;
 import pirate.Crew;
 import util.Menu;
 import util.MenuManager;
-import util.Translator;
+import util.Parser;
 
 import java.io.File;
 import java.util.Scanner;
@@ -30,21 +30,24 @@ public class Main {
 		} while(true);
 
 		try {
-			String inputString = Translator.translate(dataFile, crew);
-			System.out.println("---- DEBUG ----\n" + inputString + "---- END ----"); // DEBUG
+			String inputString = Parser.translate(dataFile, crew);
+			// DEBUG display translate result
+//			System.out.println("---- Translate Result ----\n" + inputString + "---- Result END ----");
 			Scanner fileScanner = new Scanner(inputString);
-			// adding relationships & loot preference
+			// adding relationships & loot preference with the menu 1
 			MenuManager.showMenu(Menu.FIRST, crew, fileScanner);  // display the menu 1
 			fileScanner.close();
 		} catch(Exception e) {
-			System.out.println("[Error] " + e.getMessage() + "(" + e + ")");
+			System.out.println(e.getMessage() + "(" + e + ")" + "\nEnd of the program !"); // error msg
 			return; // stop the program
 		}
 
 		// Display & manage the main menu
+		System.out.println();
+		crew.showCrew();
+		System.out.println();
 		crew.showRelation();
 		MenuManager.showMenu(Menu.MAIN, crew, sc); // display the menu 3
 		sc.close();
 	}
-
 }
