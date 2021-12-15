@@ -11,6 +11,10 @@ import java.util.Scanner;
 /**
  * MenuManager is a utility class that display and manage the different menus for the program.
  * Check {@link Menu} for the different types of menu.
+ *
+ * @author Xiumin Lin
+ * @author Céline Li
+ * @version 1.0
  */
 public class MenuManager {
 	/**
